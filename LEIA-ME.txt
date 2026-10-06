@@ -1,0 +1,43 @@
+LUIZIN PROXY — PROJETO ANDROID
+
+Este ZIP contém o projeto, não um APK pronto para instalar.
+O ambiente que criou o pacote não possui Android SDK nem compilador Java;
+por isso o APK não foi compilado ou testado em aparelho.
+
+CAMINHO MAIS SIMPLES: COMPUTADOR COM ANDROID STUDIO
+1. Extraia este ZIP.
+2. Instale e abra o Android Studio: https://developer.android.com/studio
+3. Clique em Open e selecione a pasta luizin-android (a que contém settings.gradle).
+4. Aguarde o download das ferramentas e a sincronização. Use JDK 17 nas configurações do Gradle.
+5. No menu Build, escolha a opção de gerar APK (Generate/Build APKs, conforme a versão).
+6. O instalador estará em app/build/outputs/apk/debug/app-debug.apk.
+7. Envie esse APK ao celular, abra-o e permita a instalação desse arquivo quando o Android solicitar.
+8. Você pode compartilhar o mesmo APK pelo WhatsApp como documento.
+
+ALTERNATIVA PELO NAVEGADOR: GITHUB ACTIONS
+Requer conta GitHub e envio dos arquivos do projeto para um repositório.
+1. Crie um repositório privado no GitHub.
+2. Extraia este ZIP e envie o CONTEÚDO de luizin-android para a raiz do repositório,
+   incluindo .github/workflows/apk.yml (essa pasta pode estar oculta).
+3. Abra Actions > Gerar APK > Run workflow.
+4. Quando terminar, abra a execução e baixe Luizin-Proxy-APK em Artifacts.
+5. Extraia o ZIP baixado: dentro estará app-debug.apk, o instalador.
+Se você só tem celular, o envio das pastas pode ser trabalhoso; peça ajuda com esta etapa.
+
+COMO ENTRAR
+Na tela inicial, toque em : para abrir o gerador.
+Digite Luis ou Davi em administrador, informe o nome e os dias, e gere uma key.
+Copie a key, volte, digite seu nome e cole a key para entrar.
+
+COMPORTAMENTO
+A tela e o armazenamento local funcionam sem internet.
+Keys geradas ficam apenas na instalação em que foram criadas. Enviar a key para
+outro aparelho não a registra lá. Luis/Davi são apenas filtros locais de nome;
+não são autenticação segura. A chave mestra existente no HTML foi preservada.
+Os switches não alteram o jogo. A sensibilidade é uma sugestão para ajuste manual.
+O botão Free Fire tenta abrir Free Fire ou Free Fire MAX instalado.
+O feedback abre o endereço WhatsApp que já estava no HTML original.
+Copiar usa a área de transferência do Android. Desinstalar apaga os dados locais.
+O APK de debug é para instalação direta e testes, não publicação na Play Store.
+Para atualizações, conserve a mesma chave de assinatura; compilações em ambientes
+novos podem usar outra assinatura e exigir desinstalação, que apaga as keys.

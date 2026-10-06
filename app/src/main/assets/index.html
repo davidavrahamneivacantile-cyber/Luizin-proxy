@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Luizin Proxy</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#05060b;color:#fff;font-family:Arial,sans-serif}
+.screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.card{width:100%;max-width:440px;background:#0b0d12;border:1px solid #6d20ff;border-radius:20px;padding:22px;box-shadow:0 0 35px #6d20ff44}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+h1{margin:0;font-size:28px}h2{margin:0 0 12px}.small{color:#a8a8b8;font-size:13px}
+input,select{width:100%;padding:14px;margin:7px 0 12px;border:1px solid #343746;border-radius:11px;background:#14161d;color:#fff;outline:none}
+button{border:0;border-radius:11px;padding:13px 16px;background:#6d20ff;color:#fff;font-weight:700;cursor:pointer}
+.full{width:100%}.menuBtn{width:46px;height:46px;padding:0;font-size:27px;background:#171922}
+.hidden{display:none!important}
+.item{display:flex;justify-content:space-between;align-items:center;padding:17px 5px;border-bottom:1px solid #252832}
+.desc{display:block;color:#8e909c;font-size:12px;margin-top:4px}
+.switch{width:52px;height:28px;background:#30333b;border-radius:20px;position:relative;cursor:pointer}
+.switch:after{content:"";position:absolute;width:22px;height:22px;top:3px;left:4px;border-radius:50%;background:#d9d9dd;transition:.2s}
+.switch.on{background:#6d20ff}.switch.on:after{left:26px}
+.result{margin-top:10px;padding:12px;background:#12151e;border-radius:10px;word-break:break-all;color:#b58cff}
+.keyline{font-size:12px;color:#9da1af}.notice{padding:10px;border-radius:10px;background:#171923;color:#c5c6ce;font-size:12px;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<div id="login" class="screen">
+<div class="card">
+<div class="top">
+<div><h1>Luizin Proxy</h1><div class="small">By:Luizin</div></div>
+<button id="openKeysBtn" class="menuBtn" type="button">:</button>
+</div>
+<h2>CHAVE DE ACESSO</h2>
+<input id="personName" placeholder="Digite seu nome">
+<input id="loginKey" placeholder="Digite sua chave">
+<button id="loginBtn" class="full" type="button">ENTRAR</button>
+<p id="loginMsg" class="small"></p>
+</div>
+</div>
+
+<div id="keys" class="screen hidden">
+<div class="card">
+<div class="top">
+<div><h1>Gerador de Keys</h1><div class="small">Luizin Proxy</div></div>
+<button id="backBtn" class="menuBtn" type="button">‹</button>
+</div>
+<div class="notice">Digite Luis ou Davi para usar o gerador local. As keys valem apenas nesta instalação; não há autenticação de administrador por servidor.</div>
+<input id="adminName" placeholder="Nome do administrador">
+<input id="keyName" placeholder="Nome da pessoa que receberá a Key">
+<select id="days"></select>
+<button id="generateBtn" class="full" type="button">GERAR KEY</button>
+<p id="adminMsg" class="small"></p>
+<div id="generated"></div>
+<h3>Keys salvas</h3>
+<div id="keyList"></div>
+</div>
+</div>
+
+<div id="app" class="screen hidden">
+<div class="card">
+<div class="top">
+<div><h1>Luizin Proxy</h1><div class="small">Online • By:Luizin</div></div>
+<button id="appKeysBtn" class="menuBtn" type="button">:</button>
+</div>
+
+<div class="item"><div><b>HEADTRICK</b><span class="desc">Função principal</span></div><div class="switch"></div></div>
+<div class="item"><div><b>HS 80%</b><span class="desc">Sensibilidade HS</span></div><div class="switch"></div></div>
+<div class="item"><div><b>CALIBRAR PUXADA</b><span class="desc">Calibração da puxada</span></div><div class="switch"></div></div>
+<div class="item"><div><b>RASTREAR CABEÇA</b><span class="desc">Modo de rastreamento</span></div><div class="switch"></div></div>
+<div class="item"><div><b>HS Neck</b><span class="desc">HS pescoço legit</span></div><div id="neckSwitch" class="switch"></div></div>
+
+<div class="notice">Os switches são controles visuais. As sugestões de sensibilidade devem ser aplicadas manualmente no jogo.</div><h3>Gerador de Sensi</h3>
+<select id="sensi">
+<option value="alta">Alta</option>
+<option value="media">Média</option>
+<option value="baixa">Baixa</option>
+</select>
+<button id="sensiBtn" class="full" type="button">GERAR SENSI</button>
+<div id="sensiResult" class="result hidden"></div>
+
+<div class="result">
+<b>HS pescoço legit disfarçado</b>
+</div>
+
+<br>
+<button id="feedbackBtn" class="full" type="button">FEEDBACK</button>
+<br><br>
+<button id="ffBtn" class="full" type="button">ABRIR FREE FIRE</button>
+<p id="ffMsg" class="small"></p>
+</div>
+</div>
+
+<script>
+const MASTER_KEY="WEB-eyJjIjoxNzkxMDQwNDA3OTAxLCJlIjoxNzkzNjMyNDA3OTAxfQ==";
+const $=id=>document.getElementById(id);
+
+for(let i=1;i<=30;i++){
+  const o=document.createElement("option");
+  o.value=i;o.textContent=i+(i===1?" dia":" dias");
+  $("days").appendChild(o);
+}
+
+function show(id){
+  ["login","keys","app"].forEach(x=>$(x).classList.add("hidden"));
+  $(id).classList.remove("hidden");
+}
+function getKeys(){
+  try{return JSON.parse(localStorage.getItem("luizin_keys")||"[]")}catch(e){return[]}
+}
+function saveKeys(k){localStorage.setItem("luizin_keys",JSON.stringify(k))}
+function part(){return Math.random().toString(36).slice(2,6).toUpperCase()}
+
+$("openKeysBtn").onclick=()=>{
+  $("adminName").value="";
+  $("adminMsg").textContent="";
+  show("keys");
+};
+$("appKeysBtn").onclick=()=>show("keys");
+$("backBtn").onclick=()=>show("login");
+
+$("generateBtn").onclick=()=>{
+  const admin=$("adminName").value.trim().toLowerCase();
+
+  // Apenas o acesso ao GERADOR é limitado a Luis/Davi.
+  if(admin!=="luis" && admin!=="davi"){
+    $("adminMsg").textContent="Acesso ao gerador permitido somente para Luis ou Davi.";
+    return;
+  }
+
+  const receiver=($("keyName").value.trim()||"USER")
+    .replace(/[^a-zA-Z0-9_-]/g,"").toUpperCase();
+
+  const days=Number($("days").value);
+  const key=receiver+":"+part()+"-"+part()+"-"+part();
+  const expires=Date.now()+days*86400000;
+
+  const keys=getKeys();
+  keys.push({name:receiver,key:key,expires:expires,createdBy:admin});
+  saveKeys(keys);
+
+  $("adminMsg").textContent="";
+  const result=document.createElement("div");
+  result.className="result";
+  result.textContent="KEY GERADA: "+key+" • Expira: "+new Date(expires).toLocaleString("pt-BR");
+  const copy=document.createElement("button");
+  copy.textContent="COPIAR"; copy.onclick=()=>copyKey(key);
+  result.appendChild(document.createElement("br")); result.appendChild(copy);
+  $("generated").replaceChildren(result);
+
+  renderKeys();
+};
+
+function renderKeys(){
+  const box=$("keyList"),keys=getKeys();
+  if(!keys.length){
+    box.innerHTML='<div class="small">Nenhuma Key gerada ainda.</div>';
+    return;
+  }
+  box.innerHTML="";
+  keys.forEach(x=>{
+    const expired=Date.now()>x.expires;
+    const d=document.createElement("div");
+    d.className="item";
+    d.innerHTML=
+      '<div><b>'+x.name+'</b><br><span class="keyline">'+x.key+
+      '<br>'+(expired?"EXPIRADA":"Expira: "+new Date(x.expires).toLocaleString("pt-BR"))+
+      '</span></div><button type="button">COPIAR</button>';
+    d.querySelector("button").onclick=()=>copyKey(x.key);
+    box.appendChild(d);
+  });
+}
+
+async function copyKey(k){
+  if(window.LuizinAndroid){window.LuizinAndroid.copyText(k);return;}
+  try {
+    if(navigator.clipboard) await navigator.clipboard.writeText(k);
+    else throw new Error();
+    alert("Key copiada!");
+  } catch(e){
+    const t=document.createElement("textarea"); t.value=k; document.body.appendChild(t);t.select();
+    const ok=document.execCommand("copy");t.remove();
+    if(ok) alert("Key copiada!"); else prompt("Copie sua key:",k);
+  }
+}
+
+$("loginBtn").onclick=()=>{
+  const name=$("personName").value.trim();
+  const key=$("loginKey").value.trim();
+
+  if(!name){
+    $("loginMsg").textContent="Digite seu nome.";
+    return;
+  }
+
+  // O nome NÃO precisa ser Luis ou Davi para entrar.
+  // Luis/Davi só têm permissão especial para abrir o gerador.
+  if(key===MASTER_KEY){
+    $("loginMsg").textContent="";
+    show("app");
+    return;
+  }
+
+  const found=getKeys().find(x=>
+    x.key===key && Date.now()<=x.expires
+  );
+
+  if(found){
+    $("loginMsg").textContent="";
+    show("app");
+    return;
+  }
+
+  $("loginMsg").textContent="Chave inválida ou expirada.";
+};
+
+document.querySelectorAll(".switch").forEach(sw=>{
+  const idx=Array.from(document.querySelectorAll(".switch")).indexOf(sw);
+  sw.classList.toggle("on",localStorage.getItem("luizin_switch_"+idx)==="true");
+  sw.setAttribute("role","switch"); sw.tabIndex=0;
+  const toggle=()=>{sw.classList.toggle("on");sw.setAttribute("aria-checked",sw.classList.contains("on"));localStorage.setItem("luizin_switch_"+idx,sw.classList.contains("on"));};
+  sw.setAttribute("aria-checked",sw.classList.contains("on"));
+  sw.onclick=toggle;sw.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}};
+});
+
+$("sensiBtn").onclick=()=>{
+  const v=$("sensi").value;
+  const d=v==="alta"
+    ? {Geral:195,Ponto:190,"2x":185,"4x":175,AWM:120}
+    : v==="media"
+    ? {Geral:165,Ponto:160,"2x":150,"4x":140,AWM:105}
+    : {Geral:125,Ponto:120,"2x":115,"4x":105,AWM:85};
+  $("sensiResult").classList.remove("hidden");
+  $("sensiResult").textContent=Object.entries(d).map(x=>x[0]+": "+x[1]).join(" | ");
+};
+
+$("feedbackBtn").onclick=()=>{
+  location.href="https://wa.me/559985147035?text=Ol%C3%A1%2C%20quero%20enviar%20um%20feedback%20sobre%20o%20Luizin%20Proxy.";
+};
+
+$("ffBtn").onclick=()=>{
+  const intent="intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.dts.freefireth;end";
+  if(window.LuizinAndroid){window.LuizinAndroid.openFreeFire();return;}
+  location.href=intent;
+  setTimeout(()=>{
+    $("ffMsg").textContent="Tentando abrir o Free Fire instalado...";
+  },500);
+};
+</script>
+</body>
+</html>
